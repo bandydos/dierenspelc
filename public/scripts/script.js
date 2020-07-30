@@ -41,7 +41,8 @@ const checkUnique = (newAnimal) => {
     return true;
 }
 
-// Expansion: get possible animals from server.
+// Expansion 1: get possible animals from server.
+// Expansion 2: add voting options for new animals.
 const acceptedAnimals = ['aap', 'paard', 'dromedaris', 'slang', 'papegaai', 'gorilla', 'arend']; // Example animals.
 
 const checkAccepted = (newAnimal) => {
