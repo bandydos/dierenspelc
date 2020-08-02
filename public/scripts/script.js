@@ -1,11 +1,11 @@
 $(document).ready(() => {
     $('#p-message').hide();
     $('#table-animals').hide();
-    $('#btn-submit').click(() => {
+    $('#btn-submit').click(async () => {
         const animals = getAnimals();
         console.log(animals);
 
-        if (checkAnimal()) {
+        if (await checkAnimal()) {
             succeed();
         }
         else {
@@ -18,7 +18,7 @@ var animals = [];
 
 const getAnimals = () => {
     const iAnimal = document.getElementById('input-animal').value;
-    animals.push(iAnimal);
+    animals.push(iAnimal.toLowerCase()); // Lower cases.
 
     return animals;
 }
@@ -43,11 +43,13 @@ const checkUnique = (newAnimal) => {
 
 // Expansion 1: get possible animals from server.
 // Expansion 2: add voting options for new animals.
-const acceptedAnimals = ['aap', 'paard', 'dromedaris', 'slang', 'papegaai', 'gorilla', 'arend']; // Example animals.
 
-const checkAccepted = (newAnimal) => {
-    for (let i = 0; i < acceptedAnimals.length; i++) {
-        if (newAnimal == acceptedAnimals[i]) {
+const checkAccepted = async (newAnimal) => {
+    const api_url = '/animals';
+    const fetch_res = await fetch(api_url);
+    const jsonres = await fetch_res.json();
+    for (let i = 0; i < jsonres.length; i++) {
+        if (newAnimal == jsonres[i].name.toLowerCase()) {
             return true;
         }
     }
@@ -55,15 +57,15 @@ const checkAccepted = (newAnimal) => {
     return false;
 }
 
-const checkAnimal = () => {
+const checkAnimal = async () => {
     const lastAnimal = animals[animals.length - 2];
     const newAnimal = animals[animals.length - 1];
 
-    if (animals.length < 2 && checkAccepted(newAnimal)) { // When there is only 1 animal in array.
+    if (animals.length < 2 && await checkAccepted(newAnimal)) { // When there is only 1 animal in array.
         return true;
     }
     if (animals.length > 1) {
-        if (checkLetters(lastAnimal, newAnimal) && checkUnique(newAnimal) && checkAccepted(newAnimal)) {
+        if (checkLetters(lastAnimal, newAnimal) && checkUnique(newAnimal) && await checkAccepted(newAnimal)) {
             return true;
         }
     }
