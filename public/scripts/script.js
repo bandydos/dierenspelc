@@ -44,12 +44,18 @@ const checkUnique = (newAnimal) => {
 // Expansion 1: get possible animals from server.
 // Expansion 2: add voting options for new animals.
 
-const checkAccepted = async (newAnimal) => {
+const getData = async () => {
     const api_url = '/animals';
     const fetch_res = await fetch(api_url);
     const jsonres = await fetch_res.json();
-    for (let i = 0; i < jsonres.length; i++) {
-        if (newAnimal == jsonres[i].name.toLowerCase()) {
+    return jsonres;
+}
+
+const checkAccepted = async (newAnimal) => {
+    const anis = await getData();
+    
+    for (let i = 0; i < anis.length; i++) {
+        if (newAnimal == anis[i].name.toLowerCase()) {
             return true;
         }
     }
